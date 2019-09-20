@@ -14,10 +14,12 @@ public class RegexVsArray {
     private static List<String> listKodu1 = new ArrayList<>();
     private static List<String> listKodu2 = new ArrayList<>();
     private static List<String> listKodu3 = new ArrayList<>();
+    private static List<String> listKodu4 = new ArrayList<>();
 
     private static List<String> listKodu1Res = new ArrayList<>();
     private static List<String> listKodu2Res = new ArrayList<>();
     private static List<String> listKodu3Res = new ArrayList<>();
+    private static List<String> listKodu4Res = new ArrayList<>();
 
     public static void main ( String [] args ){
         int pocetPrvku = 10;
@@ -35,21 +37,28 @@ public class RegexVsArray {
             listKodu1Res.add(removeMask(s));
         });
         long endTime = System.nanoTime();
-        System.out.println( "David reseni trvalo " + (endTime - startTime)/1000000 + " ms pro " + pocetPrvku + " prvku." );  //divide by 1000000 to get milliseconds.
+        System.out.println( "David reseni trvalo " + (endTime - startTime)/1000000 + " ms pro " + pocetPrvku + " prvku.<br/>" );  //divide by 1000000 to get milliseconds.
 
         startTime = System.nanoTime();
         listKodu2.forEach( s -> {
             listKodu2Res.add(removeMaskRegex(s));
         });
         endTime = System.nanoTime();
-        System.out.println( "Regex reseni trvalo " + (endTime - startTime)/1000000 + " ms pro " + pocetPrvku + " prvku." );  //divide by 1000000 to get milliseconds.
+        System.out.println( "Regex reseni trvalo " + (endTime - startTime)/1000000 + " ms pro " + pocetPrvku + " prvku.<br/>" );  //divide by 1000000 to get milliseconds.
 
         startTime = System.nanoTime();
         listKodu3.forEach( s -> {
             listKodu3Res.add(removeMaskRegexWithCompiledPattern(s));
         });
         endTime = System.nanoTime();
-        System.out.println( "Match reseni trvalo " + (endTime - startTime)/1000000 + " ms pro " + pocetPrvku + " prvku.\n" );  //divide by 1000000 to get milliseconds.
+        System.out.println( "Match reseni trvalo " + (endTime - startTime)/1000000 + " ms pro " + pocetPrvku + " prvku.<br/>" );  //divide by 1000000 to get milliseconds.
+
+        startTime = System.nanoTime();
+        listKodu4.forEach( s -> {
+            listKodu4Res.add(removeMaskOneMoreTry(s));
+        });
+        endTime = System.nanoTime();
+        System.out.println( "Dalsi reseni trvalo " + (endTime - startTime)/1000000 + " ms pro " + pocetPrvku + " prvku.<br/>\n" );  //divide by 1000000 to get milliseconds.
     }
 
     // naplni list kody o delce 4-13 znaku
@@ -57,9 +66,11 @@ public class RegexVsArray {
         listKodu1.clear();
         listKodu2.clear();
         listKodu3.clear();
+        listKodu4.clear();
         listKodu1Res.clear();
         listKodu2Res.clear();
         listKodu3Res.clear();
+        listKodu4Res.clear();
 
         cachedUmaskedCodes.clear();
         for(int i = 0; i < pocetPrvku; ++i){
@@ -68,6 +79,7 @@ public class RegexVsArray {
             listKodu1.add( str);
             listKodu2.add( str);
             listKodu3.add( str);
+            listKodu4.add( str);
         }
     }
 
@@ -109,4 +121,10 @@ public class RegexVsArray {
         cachedUmaskedCodes.put( kod, res );
         return res;
     }
+
+    private static String removeMaskOneMoreTry( String kod ) {
+        final int indexOfCharXOrEndOfString = kod.indexOf('X') == -1 ? kod.length() : kod.indexOf('X');
+        return kod.substring( 0 , indexOfCharXOrEndOfString );
+    }
+
 }
